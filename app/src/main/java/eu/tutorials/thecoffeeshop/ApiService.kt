@@ -1,5 +1,6 @@
 package eu.tutorials.thecoffeeshop
 
+
 import eu.tutorials.thecoffeeshop.Model.Drink
 import eu.tutorials.thecoffeeshop.Model.User
 import okhttp3.RequestBody
@@ -8,9 +9,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.Body
 import retrofit2.http.GET
 import retrofit2.http.POST
-import retrofit2.http.Path
 
-private val retrofit= Retrofit.Builder().baseUrl("http://192.168.1.10:1337/")
+private val retrofit= Retrofit.Builder().baseUrl("http://172.20.10.3:1337/")
     .addConverterFactory(GsonConverterFactory.create())
     .build()
 val Service = retrofit.create(ApiService::class.java)

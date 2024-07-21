@@ -67,7 +67,7 @@ fun Navigation( viewModel: LoginViewModel = viewModel(), navController: NavHostC
         }
         composable(Screen.ProfileView.route)
         {
-            ProfileScreen()
+            ProfileScreen(navController=navController)
         }
     }
 }

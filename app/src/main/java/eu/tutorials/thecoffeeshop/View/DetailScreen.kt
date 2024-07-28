@@ -71,6 +71,13 @@ fun DetailScreen(navController:(Drink)->Unit,
         mutableStateOf(false)
     }
     var quantity by remember { mutableIntStateOf(1) }
+    var checkQuantity by remember {
+        mutableStateOf(false)
+    }
+    if (quantity==1)
+        checkQuantity=false
+    else
+        checkQuantity=true
     Scaffold(topBar = {TopAppBar(navController = navControllerBack, titleName =drink.Name )},
         bottomBar ={ BottomBar(
         drink = drink,
@@ -117,7 +124,7 @@ fun DetailScreen(navController:(Drink)->Unit,
                             fontWeight = FontWeight.Bold,
                             fontSize = 24.sp
                         ))
-                        Text(text = "${drink.Price}vnd", style = TextStyle(
+                        Text(text = "${drink.Price} VND", style = TextStyle(
                             color = Color.Black,
                             fontWeight = FontWeight.SemiBold,
                             fontSize = 24.sp
@@ -128,7 +135,8 @@ fun DetailScreen(navController:(Drink)->Unit,
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically) {
                         Text(text = drink.Recipe, style = TextStyle(
-                            fontSize = 14.sp
+                            fontSize = 14.sp,
+                            color = Color.Red
                         )
                         )
                         Row (verticalAlignment = Alignment.CenterVertically,
@@ -144,7 +152,7 @@ fun DetailScreen(navController:(Drink)->Unit,
                                     border = BorderStroke(0.5f.dp, color = Color.Black.copy(0.7f)),
                                     shape = RectangleShape
                                 )
-                                .clickable { if (quantity > 1) quantity-- }
+                                .clickable(enabled = checkQuantity) { quantity-- }
                                 .padding(10.dp, 2.dp)
                             )
                             Text(text = "$quantity", style = TextStyle(
@@ -186,7 +194,7 @@ fun DetailScreen(navController:(Drink)->Unit,
                 )
                 .padding(8.dp)){
                 var drinkType by remember {
-                    mutableStateOf("ice")
+                    mutableStateOf("hot")
                 }
                 var sizeType by remember {
                     mutableStateOf("small")
@@ -211,29 +219,6 @@ fun DetailScreen(navController:(Drink)->Unit,
                         fontSize = 16.sp
                     ))
                     Row {
-                        Text(text = "Đá", style = TextStyle(
-                            fontSize = 18.sp,
-                            fontWeight = FontWeight.SemiBold
-                        ), modifier = Modifier
-                            .border(
-                                border = BorderStroke(
-                                    1.dp,
-                                    color = colorResource(id = R.color.brown)
-                                ),
-                                shape = RoundedCornerShape(8.dp)
-                            )
-                            .clickable { drinkType ="ice" }
-                            .background(
-                                color = if (drinkType=="ice") {
-                                    colorResource(id = R.color.brown)
-                                } else {
-                                    Color.White
-                                }
-                            )
-                            .padding(8.dp)
-
-                        )
-                        Spacer(modifier = Modifier.width(16.dp))
                         Text(text = "Nóng", style = TextStyle(
                             fontSize = 18.sp,
                             fontWeight = FontWeight.SemiBold
@@ -241,17 +226,34 @@ fun DetailScreen(navController:(Drink)->Unit,
                             .border(
                                 border = BorderStroke(
                                     1.dp,
-                                    color = colorResource(id = R.color.brown)
+                                    color = if (drinkType == "hot") {
+                                        colorResource(id = R.color.brown)
+                                    } else {
+                                        Color.Black
+                                    }
                                 ),
                                 shape = RoundedCornerShape(8.dp)
                             )
                             .clickable { drinkType = "hot" }
-                            .background(
-                                color = if (drinkType == "hot") {
-                                    colorResource(id = R.color.brown)
-                                } else {
-                                    Color.White
-                                }
+                            .padding(8.dp)
+
+                        )
+                        Spacer(modifier = Modifier.width(16.dp))
+                        Text(text = "Lạnh", style = TextStyle(
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.SemiBold
+                        ), modifier = Modifier
+                            .clickable { drinkType = "cool" }
+                            .border(
+                                border = BorderStroke(
+                                    1.dp,
+                                    color = if (drinkType == "cool") {
+                                        colorResource(id = R.color.brown)
+                                    } else {
+                                        Color.Black
+                                    }
+                                ),
+                                shape = RoundedCornerShape(8.dp)
                             )
                             .padding(8.dp)
 
@@ -273,18 +275,15 @@ fun DetailScreen(navController:(Drink)->Unit,
                             .border(
                                 border = BorderStroke(
                                     1.dp,
-                                    color = colorResource(id = R.color.brown)
+                                    color = if (sizeType == "small") {
+                                        colorResource(id = R.color.brown)
+                                    } else {
+                                        Color.Black
+                                    }
                                 ),
                                 shape = RoundedCornerShape(8.dp)
                             )
                             .clickable { sizeType = "small" }
-                            .background(
-                                color = if (sizeType == "small") {
-                                    colorResource(id = R.color.brown)
-                                } else {
-                                    Color.White
-                                }
-                            )
                             .padding(8.dp)
 
                         )
@@ -296,18 +295,15 @@ fun DetailScreen(navController:(Drink)->Unit,
                             .border(
                                 border = BorderStroke(
                                     1.dp,
-                                    color = colorResource(id = R.color.brown)
+                                    color = if (sizeType == "medium") {
+                                        colorResource(id = R.color.brown)
+                                    } else {
+                                        Color.Black
+                                    }
                                 ),
                                 shape = RoundedCornerShape(8.dp)
                             )
                             .clickable { sizeType = "medium" }
-                            .background(
-                                color = if (sizeType == "medium") {
-                                    colorResource(id = R.color.brown)
-                                } else {
-                                    Color.White
-                                }
-                            )
                             .padding(8.dp)
 
                         )
@@ -319,18 +315,15 @@ fun DetailScreen(navController:(Drink)->Unit,
                             .border(
                                 border = BorderStroke(
                                     1.dp,
-                                    color = colorResource(id = R.color.brown)
+                                    color = if (sizeType == "big") {
+                                        colorResource(id = R.color.brown)
+                                    } else {
+                                        Color.Black
+                                    }
                                 ),
                                 shape = RoundedCornerShape(8.dp)
                             )
                             .clickable { sizeType = "big" }
-                            .background(
-                                color = if (sizeType == "big") {
-                                    colorResource(id = R.color.brown)
-                                } else {
-                                    Color.White
-                                }
-                            )
                             .padding(8.dp)
 
                         )
@@ -351,17 +344,15 @@ fun DetailScreen(navController:(Drink)->Unit,
                             .border(
                                 border = BorderStroke(
                                     1.dp,
-                                    color = colorResource(id = R.color.brown)
+                                    color = if (sugarType == "normal") {
+                                        colorResource(id = R.color.brown)
+                                    } else {
+                                        Color.Black
+                                    }
                                 ),
                                 shape = RoundedCornerShape(8.dp)
                             )
-                            .background(
-                                color = if (sugarType=="normal") {
-                                    colorResource(id = R.color.brown)
-                                } else {
-                                    Color.White
-                                }
-                            )
+
                             .padding(8.dp)
                             .clickable { sugarType = "normal" }
                         )
@@ -373,16 +364,13 @@ fun DetailScreen(navController:(Drink)->Unit,
                             .border(
                                 border = BorderStroke(
                                     1.dp,
-                                    color = colorResource(id = R.color.brown)
+                                    color = if (sugarType == "decrease") {
+                                        colorResource(id = R.color.brown)
+                                    } else {
+                                        Color.Black
+                                    }
                                 ),
                                 shape = RoundedCornerShape(8.dp)
-                            )
-                            .background(
-                                color = if (sugarType == "decrease") {
-                                    colorResource(id = R.color.brown)
-                                } else {
-                                    Color.White
-                                }
                             )
                             .padding(8.dp)
                             .clickable { sugarType = "decrease" }
@@ -404,16 +392,13 @@ fun DetailScreen(navController:(Drink)->Unit,
                             .border(
                                 border = BorderStroke(
                                     1.dp,
-                                    color = colorResource(id = R.color.brown)
+                                    color = if (iceType == "normal") {
+                                        colorResource(id = R.color.brown)
+                                    } else {
+                                        Color.Black
+                                    }
                                 ),
                                 shape = RoundedCornerShape(8.dp)
-                            )
-                            .background(
-                                color = if (iceType=="normal") {
-                                    colorResource(id = R.color.brown)
-                                } else {
-                                    Color.White
-                                }
                             )
                             .padding(8.dp)
                             .clickable { iceType = "normal" }
@@ -426,16 +411,13 @@ fun DetailScreen(navController:(Drink)->Unit,
                             .border(
                                 border = BorderStroke(
                                     1.dp,
-                                    color = colorResource(id = R.color.brown)
+                                    color = if (iceType == "decrease") {
+                                        colorResource(id = R.color.brown)
+                                    } else {
+                                        Color.Black
+                                    }
                                 ),
                                 shape = RoundedCornerShape(8.dp)
-                            )
-                            .background(
-                                color = if (iceType == "decrease") {
-                                    colorResource(id = R.color.brown)
-                                } else {
-                                    Color.White
-                                }
                             )
                             .padding(8.dp)
                             .clickable { iceType = "decrease" }
@@ -444,7 +426,6 @@ fun DetailScreen(navController:(Drink)->Unit,
                 }
             }
             Spacer(modifier = Modifier.height(8.dp))
-
             Column (modifier = Modifier
                 .padding(16.dp, 8.dp)
                 .border(
@@ -458,7 +439,8 @@ fun DetailScreen(navController:(Drink)->Unit,
                         color = Color.Black,
                         fontWeight = FontWeight.SemiBold,
                         fontSize = 24.sp
-                    ))
+                    )
+                    )
 
                     Row (horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically,
@@ -475,17 +457,17 @@ fun DetailScreen(navController:(Drink)->Unit,
                                 onClick = {checkSuaDac=!checkSuaDac},
                                 role = Role.RadioButton
                             )){
-                            Text(text = "+5.000vnd", style = TextStyle(
+                            Text(text = "+5.000 VND", style = TextStyle(
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.SemiBold,
-                                color = colorResource(id = R.color.brown)
+                                color = colorResource(id = R.color.black)
                             ))
                             Spacer(modifier = Modifier.width(4.dp))
                             RadioButton(selected = checkSuaDac,
                                 onClick = null,
                                 colors= RadioButtonDefaults.colors(
-                                    selectedColor = Color.Green,
-                                    unselectedColor = Color.Red,
+                                    selectedColor = Color.Red,
+                                    unselectedColor = Color.Black,
                                     disabledSelectedColor = Color.Gray,
                                     disabledUnselectedColor = Color.Gray
                                 ))
@@ -506,17 +488,17 @@ fun DetailScreen(navController:(Drink)->Unit,
                                 onClick = {checkTranChau=!checkTranChau},
                                 role = Role.RadioButton
                             )){
-                            Text(text = "+6.000vnd", style = TextStyle(
+                            Text(text = "+6.000 VND", style = TextStyle(
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.SemiBold,
-                                color = colorResource(id = R.color.brown)
+                                color = Color.Black
                             ))
                             Spacer(modifier = Modifier.width(4.dp))
                             RadioButton(selected = checkTranChau,
                                 onClick = null,
                                 colors=RadioButtonDefaults.colors(
-                                    selectedColor = Color.Green,
-                                    unselectedColor = Color.Red,
+                                    selectedColor = Color.Red,
+                                    unselectedColor = Color.Black,
                                     disabledSelectedColor = Color.Gray,
                                     disabledUnselectedColor = Color.Gray
                                 ))
@@ -537,17 +519,17 @@ fun DetailScreen(navController:(Drink)->Unit,
                                 onClick = {checkDuaKho=!checkDuaKho},
                                 role = Role.RadioButton
                             )){
-                            Text(text = "+3.000vnd", style = TextStyle(
+                            Text(text = "+3.000 VND", style = TextStyle(
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.SemiBold,
-                                color = colorResource(id = R.color.brown)
+                                color = Color.Black
                             ))
                             Spacer(modifier = Modifier.width(4.dp))
                             RadioButton(selected = checkDuaKho,
                                 onClick = null,
                                 colors=RadioButtonDefaults.colors(
-                                    selectedColor = Color.Green,
-                                    unselectedColor = Color.Red,
+                                    selectedColor = Color.Red,
+                                    unselectedColor = Color.Black,
                                     disabledSelectedColor = Color.Gray,
                                     disabledUnselectedColor = Color.Gray
                                 ))
@@ -568,17 +550,17 @@ fun DetailScreen(navController:(Drink)->Unit,
                                 onClick = {checkThachDua=!checkThachDua},
                                 role = Role.RadioButton
                             )){
-                            Text(text = "+7.000vnd", style = TextStyle(
+                            Text(text = "+7.000 VND", style = TextStyle(
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.SemiBold,
-                                color = colorResource(id = R.color.brown)
+                                color = Color.Black
                             ))
                             Spacer(modifier = Modifier.width(4.dp))
                             RadioButton(selected = checkThachDua,
                                 onClick = null,
                                 colors=RadioButtonDefaults.colors(
-                                    selectedColor = Color.Green,
-                                    unselectedColor = Color.Red,
+                                    selectedColor = Color.Red,
+                                    unselectedColor = Color.Black,
                                     disabledSelectedColor = Color.Gray,
                                     disabledUnselectedColor = Color.Gray
                                 ))
@@ -599,17 +581,17 @@ fun DetailScreen(navController:(Drink)->Unit,
                                 onClick = {checkDuongDen=!checkDuongDen},
                                 role = Role.RadioButton
                             )){
-                            Text(text = "+10.000vnd", style = TextStyle(
+                            Text(text = "+10.000 VND", style = TextStyle(
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.SemiBold,
-                                color = colorResource(id = R.color.brown)
+                                color = Color.Black
                             ))
                             Spacer(modifier = Modifier.width(4.dp))
                             RadioButton(selected = checkDuongDen,
                                 onClick = null,
                                 colors=RadioButtonDefaults.colors(
-                                    selectedColor = Color.Green,
-                                    unselectedColor = Color.Red,
+                                    selectedColor = Color.Red,
+                                    unselectedColor = Color.Black,
                                     disabledSelectedColor = Color.Gray,
                                     disabledUnselectedColor = Color.Gray
                                 ))
@@ -645,7 +627,8 @@ fun TopAppBar(navController: NavController,
               titleName:String){
     Row (horizontalArrangement = Arrangement.Start,
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier.padding(8.dp)
+        modifier = Modifier
+            .padding(8.dp)
             .height(40.dp)){
         Icon(imageVector = Icons.Default.ArrowBack,
             contentDescription =null,
@@ -696,7 +679,7 @@ fun BottomBar(drink: Drink,
                 color = Color.Black
             )
             )
-            Text(text = "$total vnd",style= TextStyle(
+            Text(text = "$total VND",style= TextStyle(
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold,
                 color = colorResource(id = R.color.brown)

@@ -1,5 +1,6 @@
 package eu.tutorials.thecoffeeshop.View
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -19,9 +20,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -44,6 +42,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -75,7 +74,10 @@ fun HomeScreen(navController:(Drink)-> Unit,
     val menuViewModel:DrinkViewModel= viewModel()
     val viewState by menuViewModel.drinksState
     Scaffold (bottomBar = {
-        BottomHomeBar(navToBottomBar=navToBottomBar)
+        BottomHomeBar(navToBottomBar=navToBottomBar,
+            iconHome = R.drawable.home_on,
+            iconHistory = R.drawable.history_off,
+            iconProfile = R.drawable.profile_off)
     }){
         Column(modifier = Modifier
             .fillMaxWidth()
@@ -97,9 +99,9 @@ fun HomeScreen(navController:(Drink)-> Unit,
                         Icon(imageVector = Icons.Default.Search, contentDescription =null )
                     }
                 },
-                colors = TextFieldDefaults.outlinedTextFieldColors(
-                    focusedBorderColor = Color.Blue,
-                    unfocusedBorderColor = Color.Gray
+                colors = TextFieldDefaults.colors(
+                    focusedContainerColor = Color.Blue,
+                    unfocusedContainerColor = Color.Gray
                 )
             )
             ImageSliderWithIndicator(images = image)
@@ -119,8 +121,44 @@ fun HomeScreen(navController:(Drink)-> Unit,
 
 }
 @Composable
-fun BottomHomeBar(navToBottomBar: NavController)
+fun BottomHomeBar(navToBottomBar: NavController,
+                  @DrawableRes iconHome:Int,
+                  @DrawableRes iconHistory:Int,
+                  @DrawableRes iconProfile:Int)
 {
+    var textHomeColor by remember {
+        mutableStateOf(Color.Black)
+    }
+    var textHistoryColor by remember {
+        mutableStateOf(Color.Black)
+    }
+    var textProfileColor by remember {
+        mutableStateOf(Color.Black)
+    }
+    if(iconHome==R.drawable.home_on)
+    {
+        textHomeColor=Color.Black.copy(0.8f)
+    }
+    else
+    {
+        textHomeColor=Color.Black.copy(0.4f)
+    }
+    if(iconHistory==R.drawable.history_on)
+    {
+        textHistoryColor=Color.Black.copy(0.8f)
+    }
+    else
+    {
+        textHistoryColor=Color.Black.copy(0.4f)
+    }
+    if(iconProfile==R.drawable.profile_on)
+    {
+        textProfileColor=Color.Black.copy(0.8f)
+    }
+    else
+    {
+        textProfileColor=Color.Black.copy(0.4f)
+    }
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -129,15 +167,49 @@ fun BottomHomeBar(navToBottomBar: NavController)
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceAround
     ) {
-        IconButton(onClick = { navToBottomBar.navigate(Screen.HomeView.route) }) {
-            Icon(Icons.Default.Home, contentDescription = "Home")
+        Column(verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .padding(8.dp)
+                .clickable { navToBottomBar.navigate(Screen.HomeView.route) }) {
+            Image(painter = painterResource(id = iconHome),
+                contentDescription =null,
+                modifier = Modifier
+                    .size(24.dp))
+            Text(text = "Trang chủ", style = TextStyle(
+                fontSize = 20.sp,
+                color = textHomeColor
+            ))
         }
-        IconButton(onClick = { navToBottomBar.navigate(Screen.HistoryView.route) }) {
-            Icon(Icons.Default.Favorite, contentDescription = "Favorites")
+        Column(verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .padding(8.dp)
+                .clickable { navToBottomBar.navigate(Screen.HistoryView.route) }) {
+            Image(painter = painterResource(id =iconHistory),
+                contentDescription =null,
+                modifier = Modifier
+                    .size(24.dp))
+            Text(text = "Lịch sử", style = TextStyle(
+                fontSize = 20.sp,
+                color = textHistoryColor
+            ))
         }
-        IconButton(onClick = { navToBottomBar.navigate(Screen.PaymentView.route) }) {
-            Icon(Icons.Default.Person, contentDescription = "Profile")
+        Column(verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .padding(8.dp)
+                .clickable { navToBottomBar.navigate(Screen.ProfileView.route) }) {
+            Image(painter = painterResource(id =iconProfile),
+                contentDescription =null,
+                modifier = Modifier
+                    .size(24.dp))
+            Text(text = "Tài khoản", style = TextStyle(
+                fontSize = 20.sp,
+                color = textProfileColor
+            ))
         }
+
     }
 }
 @Composable
@@ -171,7 +243,7 @@ fun DrinkItem(drink:Drink,
     {
         val verticalGuideLine20=createGuidelineFromStart(0.2f)
         val (imgIcon,boxRate,ratingText,starIcon)=createRefs()
-        Image(painter = rememberAsyncImagePainter(model ="http://192.168.1.10:1337${drink.ImageURL.url}")
+        Image(painter = rememberAsyncImagePainter(model ="http://${stringResource(id = R.string.url_link)}:1337${drink.ImageURL.url}")
             , contentDescription = null
             , modifier= Modifier
                 .background(color = Color.Gray.copy(0.1f), shape = CircleShape)
@@ -199,7 +271,7 @@ fun DrinkItem(drink:Drink,
             Text(
                 text = "4.5",
                 color = Color.Black,
-                style = TextStyle(fontSize = 12.sp),
+                style = TextStyle(fontSize = 15.sp),
                 modifier = Modifier.constrainAs(ratingText) {
                     top.linkTo(imgIcon.top, margin = 70.dp)
                     start.linkTo(parent.start, margin = 10.dp)
@@ -209,7 +281,7 @@ fun DrinkItem(drink:Drink,
                 painter = painterResource(id = R.drawable.star),
                 contentDescription = "Star",
                 modifier = Modifier
-                    .size(15.dp)
+                    .size(20.dp)
                     .constrainAs(starIcon) {
                         top.linkTo(ratingText.top)
                         start.linkTo(ratingText.end, margin = 2.dp)
@@ -223,7 +295,7 @@ fun DrinkItem(drink:Drink,
             style = TextStyle(
                 color = Color.Black.copy(0.7f),
                 fontWeight = FontWeight.SemiBold,
-                fontSize = 14.sp
+                fontSize = 18.sp
             ), modifier=Modifier.constrainAs(tvName)
             {
                 start.linkTo(verticalGuideLine20)
@@ -233,7 +305,7 @@ fun DrinkItem(drink:Drink,
         Text(text = "${drink.Price} VND", style = TextStyle(
             color = Color.Black,
             fontWeight = FontWeight.SemiBold,
-            fontSize = 14.sp
+            fontSize = 18.sp
         ), modifier=Modifier.constrainAs(tvPrice)
             {
                 end.linkTo(parent.end)
@@ -241,9 +313,9 @@ fun DrinkItem(drink:Drink,
             }
         )
         Text(text = drink.Recipe, style = TextStyle(
-            fontSize = 12.sp,
+            fontSize = 14.sp,
             fontWeight = FontWeight.Normal,
-            color = Color.Black.copy(alpha = 0.5f)
+            color = Color.Black
         ), modifier=Modifier.constrainAs(tvRecipe)
             {
               top.linkTo(horizontalGuideLine50)
@@ -257,7 +329,7 @@ fun DrinkItem(drink:Drink,
 fun ImageSliderItem(imageRes:Int){
     Image(painter = painterResource(id = imageRes),
         contentDescription = null,
-        contentScale = ContentScale.Crop,
+        contentScale = ContentScale.FillWidth,
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 8.dp)
